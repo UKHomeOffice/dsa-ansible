@@ -34,7 +34,7 @@ steps:
       from_secret: DOCKER_TOKEN
   when:
     branch:
-    - master
+    - main
     event:
     - push
 
