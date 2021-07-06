@@ -24,7 +24,7 @@ steps:
   pull: if-not-exists
   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
   commands:
-  - docker login -u=$${DOCKER_USERNAME} -p=$${DOCKER_TOKEN} quay.io
+  - docker login -u="ukhomeofficedigital+dsa_shared_service" -p=$${DOCKER_TOKEN} quay.io
   - docker tag quay.io/ukhomeofficedigital/dsa-ansible:$${DRONE_COMMIT_SHA} quay.io/ukhomeofficedigital/dsa-ansible:latest
   - docker push quay.io/ukhomeofficedigital/dsa-ansible:$${DRONE_COMMIT_SHA}
   - docker push quay.io/ukhomeofficedigital/dsa-ansible:latest
