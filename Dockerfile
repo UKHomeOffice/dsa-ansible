@@ -8,6 +8,6 @@
 
 
 # Latest version of centos
-FROM alpine:3.11
+FROM alpine:3.14
 RUN apk add --no-cache openssh-client ansible git 
 WORKDIR /ansible 
