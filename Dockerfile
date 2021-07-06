@@ -1,5 +1,5 @@
 # Latest version of centos
-FROM quay.io/ukhomeofficedigital/python-alpine:3.7.6-alpine3.11
+FROM alpine:3.11
 MAINTAINER Toshio Kuratomi <tkuratomi@ansible.com>
 RUN yum clean all && \
     yum -y install epel-release && \
