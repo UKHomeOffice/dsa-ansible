@@ -12,8 +12,10 @@ steps:
   pull: if-not-exists
   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
   commands:
-  - docker build --label org.label-schema.build-date=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
-  --label org.label-schema.vcs-ref=$(git rev-parse --short HEAD -t quay.io/ukhomeofficedigital/dsa-ansible:$${DRONE_COMMIT_SHA} .
+  - docker build docker build \
+  --label org.label-schema.build-date=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+  --label org.label-schema.vcs-ref=$(git rev-parse --short HEAD) \
+  -t quay.io/ukhomeofficedigital/dsa-ansible:$${DRONE_COMMIT_SHA} .
   environment:
     # DOCKER_HOST: tcp://172.17.0.1:2375
   when:
