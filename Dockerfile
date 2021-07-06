@@ -1,11 +1,51 @@
-FROM plugins/base:linux-amd64
+# pull base image
+FROM alpine:3.13
 
-LABEL maintainer="Drone.IO Community <drone-dev@googlegroups.com>" \
-  org.label-schema.name="Drone Ansible" \
-  org.label-schema.vendor="Drone.IO Community" \
-  org.label-schema.schema-version="1.0"
+# Labels.
+LABEL maintainer="will@willhallonline.co.uk" \
+    org.label-schema.schema-version="1.0" \
+    org.label-schema.build-date=$BUILD_DATE \
+    org.label-schema.vcs-ref=$VCS_REF \
+    org.label-schema.name="willhallonline/ansible" \
+    org.label-schema.description="Ansible inside Docker" \
+    org.label-schema.url="https://github.com/willhallonline/docker-ansible" \
+    org.label-schema.vcs-url="https://github.com/willhallonline/docker-ansible" \
+    org.label-schema.vendor="Will Hall Online" \
+    org.label-schema.docker.cmd="docker run --rm -it -v $(pwd):/ansible ~/.ssh/id_rsa:/root/id_rsa willhallonline/ansible:2.10-alpine-3.13"
 
-RUN apk add --no-cache bash git curl rsync openssh-client sshpass py3-pip py3-requests py3-paramiko python3-dev libffi-dev libressl-dev libressl build-base
+RUN apk --no-cache add \
+        sudo \
+        python3\
+        py3-pip \
+        openssl \
+        ca-certificates \
+        sshpass \
+        openssh-client \
+        rsync \
+        git && \
+    apk --no-cache add --virtual build-dependencies \
+        python3-dev \
+        libffi-dev \
+        musl-dev \
+        gcc \
+        cargo \
+        openssl-dev \
+        libressl-dev \
+        build-base && \
+    pip3 install --upgrade pip wheel && \
+    pip3 install --upgrade cryptography cffi && \
+    pip3 install ansible==2.10.9 && \
+    pip3 install mitogen ansible-lint jmespath && \
+    pip3 install --upgrade pywinrm && \
+    apk del build-dependencies && \
+    rm -rf /var/cache/apk/* && \
+    rm -rf /root/.cache/pip && \
+    rm -rf /root/.cargo
 
-ADD release/linux/amd64/drone-ansible /bin/
-ENTRYPOINT ["/bin/drone-ansible"]
+RUN mkdir /ansible && \
+    mkdir -p /etc/ansible && \
+    echo 'localhost' > /etc/ansible/hosts
+
+WORKDIR /ansible
+
+CMD [ "ansible-playbook", "--version" ]
